@@ -6,55 +6,100 @@ import { InputField } from './Form/InputField';
 import { SelectField } from './Form/SelectField';
 import { DatePickerField } from './Form/DatePickerField';
 import { textRegex, streetRegex, zipCodesRegex } from '../utils/helpers/regex';
+import { useState } from 'react';
 
 const Form = styled.form`
-  max-width: 800px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
+  align-items: start;
 `;
+
 const FormWrapper = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   justify-content: space-between;
-  gap: 24px;
+  column-gap: 24px;
   align-items: self-end;
   width: 100%;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+  @media (max-width: 414px) {
+    grid-template-columns: 1fr;
+  }
 `;
+
 const Button = styled.button`
-  width: 20%;
-  margin: 0 auto;
-  margin-top: 10px;
-  margin-bottom: 50px;
+  border-radius: ${({ theme }) => theme.borderRadius.button};
+  color: ${({ theme }) => theme.colors.light};
+  font-weight: ${({ theme }) => theme.fontWeight.extraBold};
+  background-color: ${({ theme }) => theme.colors.primary};
+  box-shadow: 0px 0px 8px ${({ theme }) => theme.colors.shadow}
+  margin-top: 24px;
+  margin-bottom: 36px;
   padding: 16px 54px;
-  border-radius: 50px;
-  color: #fff;
-  font-weight: bold;
-  background-color: #445441;
   border: none;
-  box-shadow: 0px 0px 8px #728c6d;
   &:hover {
-    background-color: RGBA(68, 84, 65, 0.79);
+    background-color: ${({ theme }) => theme.colors.secondary};
     transition: 0.2s;
   }
 `;
+
 const Title = styled.h2`
-  font-size: 20px;
+  font-size: ${({ theme }) => theme.fontSize.sm};
   margin: 0;
+  width: 100%;
 `;
 
-export const EmployeeForm = () => {
+export const EmployeeForm = modalProps => {
+  const employees = JSON.parse(localStorage.getItem('employees')) || [];
+  const { setModalIsOpen } = modalProps;
+
+  const [employee, setEmployee] = useState({
+    firstName: '',
+    lastName: '',
+    birthdate: '',
+    startDate: '',
+    department: '',
+    street: '',
+    city: '',
+    state: '',
+    zipCode: '',
+  });
+
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm();
+    getValues,
+    reset,
+  } = useForm({
+    defaultValues: employee,
+  });
 
-  const onSubmit = data => {
-    alert(JSON.stringify(data));
-    console.log(JSON.stringify(data));
+  const SaveEmployee = () => {
+    setEmployee({
+      firstName: getValues('firstName'),
+      lastName: getValues('lastName'),
+      birthdate: getValues('birthdate'),
+      startDate: getValues('startDate'),
+      department: getValues('department'),
+      street: getValues('street'),
+      city: getValues('city'),
+      state: getValues('state'),
+      zipCode: getValues('zipCode'),
+    });
+  };
+
+  const onSubmit = () => {
+    setModalIsOpen(true);
+    employees.push(employee);
+    localStorage.setItem('employees', JSON.stringify(employees));
+
+    reset();
   };
 
   return (
@@ -87,14 +132,30 @@ export const EmployeeForm = () => {
           label={'Date of birth'}
           input={'birthdate'}
           control={control}
+          pattern={/^\d{2}\/\d{2}\/\d{4}$/}
           errorMessage={'Please select birthdate'}
         />
       </FormWrapper>
+      {/* <FormWrapper>
+        <InputField
+          label="Date of birth"
+          input="birthdate"
+          type="date"
+          isValueAsDate
+          register={register}
+          required
+          pattern={/^\d{2}\/\d{2}\/\d{4}$/}
+          errors={errors.birthdate}
+          errorMessage="Please enter birthdate"
+        />
+      </FormWrapper> */}
       <Title>Adress</Title>
       <FormWrapper>
         <InputField
           label="Street"
           input="street"
+          type="text"
+          placeholder="Enter the street"
           register={register}
           required
           pattern={streetRegex}
@@ -104,17 +165,20 @@ export const EmployeeForm = () => {
         <InputField
           label="City"
           input="city"
+          type="text"
+          placeholder="Enter the city"
           register={register}
           required
           pattern={textRegex}
           errors={errors.city}
           errorMessage="Please enter the city"
         />
-      </FormWrapper>
-      <FormWrapper>
+        {/* </FormWrapper>
+      <FormWrapper> */}
         <SelectField
           label={'State'}
           input={'state'}
+          placeholder="Select state"
           control={control}
           errorMessage={'Please select state'}
           options={states}
@@ -122,6 +186,8 @@ export const EmployeeForm = () => {
         <InputField
           label="ZipCode"
           input="zipCode"
+          type="text"
+          placeholder="Enter zipcode"
           register={register}
           required
           pattern={zipCodesRegex}
@@ -135,19 +201,34 @@ export const EmployeeForm = () => {
         <SelectField
           label={'Department'}
           input={'department'}
+          placeholder="Select department"
           control={control}
           errorMessage={'Please select department'}
           options={departments}
         />
+        {/* <InputField
+          label="Start Date"
+          input="startDate"
+          type="date"
+          isValueAsDate
+          register={register}
+          required
+          pattern={/^\d{2}\/\d{2}\/\d{4}$/}
+          errors={errors.startDate}
+          errorMessage="Please enter start Date"
+        /> */}
         <DatePickerField
           label={'Start Date'}
           input={'startDate'}
           control={control}
+          pattern={/^\d{2}\/\d{2}\/\d{4}$/}
           errorMessage={'Please select start date'}
         />
       </FormWrapper>
 
-      <Button type="submit">Save</Button>
+      <Button type="submit" onClick={() => SaveEmployee()}>
+        Save
+      </Button>
     </Form>
   );
 };

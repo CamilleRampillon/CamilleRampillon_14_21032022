@@ -1,19 +1,16 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import Logo from '../assets/hrnet-logo.jpeg';
 
 const Nav = styled.nav`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 24px;
-  background-color: #fff;
-  box-shadow: 0px 0px 7px 1px RGBA(172, 212, 164, 0.4);
+  padding: 0 24px;
 `;
 const LogoWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
 `;
 const LinkWrapper = styled.div`
   display: flex;
@@ -22,26 +19,24 @@ const LinkWrapper = styled.div`
 `;
 const NavLink = styled(Link)`
   text-decoration: none;
-  color: RGBA(68, 84, 65, 0.79);
+  color: ${({ theme }) => theme.colors.primary};
   &:visited {
-    color: RGBA(68, 84, 65, 0.79);
+    color: ${({ theme }) => theme.colors.primary};
   }
   &:hover {
-    color: RGBA(172, 212, 164, 1);
+    color: ${({ theme }) => theme.colors.secondary};
     transition: 0.2s;
   }
 `;
-const Image = styled.img`
-  width: 60px;
-  height: 55.2px;
+const Title = styled.h2`
+  color: ${({ theme }) => theme.colors.primary};
 `;
 
 export const NavigationBar = () => {
   return (
     <Nav>
       <LogoWrapper>
-        <Image src={Logo} />
-        <NavLink to="/">HRnet</NavLink>
+        <Title>HRnet</Title>
       </LogoWrapper>
       <LinkWrapper>
         <NavLink to="/">Create New</NavLink>

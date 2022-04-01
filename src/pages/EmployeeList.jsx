@@ -3,8 +3,7 @@ import { EmployeeTable } from '../components/EmployeeTable';
 import { Layout } from '../components/Layout';
 
 const Title = styled.h1`
-  margin-top: 46px;
-  text-align: center;
+  margin-top: 26px;
 `;
 
 export const EmployeeList = () => {
