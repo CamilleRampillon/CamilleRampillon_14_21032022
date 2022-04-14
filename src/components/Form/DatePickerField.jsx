@@ -1,10 +1,9 @@
 import styled from 'styled-components';
 import { Controller } from 'react-hook-form';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import { ErrorMessage } from './ErrorMessage';
-import { Input } from './InputField';
 import { Label } from './Label';
+import { checkBirthdateValidity } from '../../utils/helpers/regex';
+import { Input } from './InputField';
 
 const DatePickerContent = styled.div`
   margin-bottom: 16px;
@@ -13,21 +12,44 @@ const DatePickerContent = styled.div`
   flex-direction: column;
 `;
 
+/**
+ * Render Form Date Picker Field
+ * @param {string} input
+ * @param {string} label
+ * @param {object} control
+ * @param {string} errorMessage
+ * @param {object} pattern
+ * @param {string} birthdateValue
+ * @returns {JSX}
+ */
 export const DatePickerField = ({
   input,
   label,
   control,
   errorMessage,
   pattern,
+  birthdateValue,
 }) => {
   return (
     <DatePickerContent>
       <Label>{label}</Label>
+
       <Controller
         defaultValue=""
         control={control}
         name={input}
         rules={{
+          ...(birthdateValue
+            ? {
+                validate: birthdateValue => {
+                  if (
+                    birthdateValue &&
+                    checkBirthdateValidity(birthdateValue) === false
+                  )
+                    return 'Must be at least 18 years old';
+                },
+              }
+            : null),
           pattern: {
             value: pattern,
             message: errorMessage,
@@ -39,12 +61,13 @@ export const DatePickerField = ({
         }}
         render={({ field, fieldState: { error } }) => (
           <>
-            <DatePicker
-              className="input"
-              placeholderText="Select date"
-              onChange={e => field.onChange(e)}
-              selected={field.value}
-              customInput={<Input style={{ width: '91%' }}/>}
+            <Input
+              type="date"
+              className="input--date"
+              onChange={e => {
+                field.onChange(e.target.value);
+              }}
+              value={field.value}
             />
             <ErrorMessage>{error?.message}</ErrorMessage>
           </>

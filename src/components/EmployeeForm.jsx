@@ -5,8 +5,13 @@ import { useForm } from 'react-hook-form';
 import { InputField } from './Form/InputField';
 import { SelectField } from './Form/SelectField';
 import { DatePickerField } from './Form/DatePickerField';
-import { textRegex, streetRegex, zipCodesRegex } from '../utils/helpers/regex';
-import { useState } from 'react';
+import {
+  textRegex,
+  streetRegex,
+  zipCodesRegex,
+  dateRegex,
+} from '../utils/helpers/regex';
+import { useEffect, useState } from 'react';
 
 const Form = styled.form`
   margin: 0 auto;
@@ -53,8 +58,17 @@ const Title = styled.h2`
   width: 100%;
 `;
 
+/**
+ * Render Create Employee Form
+ * @param {object} modalProps
+ * @returns {JSX}
+ */
 export const EmployeeForm = modalProps => {
-  const employees = JSON.parse(localStorage.getItem('employees')) || [];
+  const [employees, setEmployees] = useState([]);
+  useEffect(() => {
+    setEmployees(JSON.parse(localStorage.getItem('employees')) ?? []);
+  }, []);
+
   const { setModalIsOpen } = modalProps;
 
   const [employee, setEmployee] = useState({
@@ -79,7 +93,9 @@ export const EmployeeForm = modalProps => {
   } = useForm({
     defaultValues: employee,
   });
-
+  /**
+   * Save employee information to state
+   */
   const SaveEmployee = () => {
     setEmployee({
       firstName: getValues('firstName'),
@@ -94,6 +110,9 @@ export const EmployeeForm = modalProps => {
     });
   };
 
+  /**
+   * Update local storage with employee state
+   */
   const onSubmit = () => {
     setModalIsOpen(true);
     employees.push(employee);
@@ -132,23 +151,11 @@ export const EmployeeForm = modalProps => {
           label={'Date of birth'}
           input={'birthdate'}
           control={control}
-          pattern={/^\d{2}\/\d{2}\/\d{4}$/}
+          birthdateValue={getValues('birthdate')}
+          pattern={dateRegex}
           errorMessage={'Please select birthdate'}
         />
       </FormWrapper>
-      {/* <FormWrapper>
-        <InputField
-          label="Date of birth"
-          input="birthdate"
-          type="date"
-          isValueAsDate
-          register={register}
-          required
-          pattern={/^\d{2}\/\d{2}\/\d{4}$/}
-          errors={errors.birthdate}
-          errorMessage="Please enter birthdate"
-        />
-      </FormWrapper> */}
       <Title>Adress</Title>
       <FormWrapper>
         <InputField
@@ -173,8 +180,6 @@ export const EmployeeForm = modalProps => {
           errors={errors.city}
           errorMessage="Please enter the city"
         />
-        {/* </FormWrapper>
-      <FormWrapper> */}
         <SelectField
           label={'State'}
           input={'state'}
@@ -206,27 +211,20 @@ export const EmployeeForm = modalProps => {
           errorMessage={'Please select department'}
           options={departments}
         />
-        {/* <InputField
-          label="Start Date"
-          input="startDate"
-          type="date"
-          isValueAsDate
-          register={register}
-          required
-          pattern={/^\d{2}\/\d{2}\/\d{4}$/}
-          errors={errors.startDate}
-          errorMessage="Please enter start Date"
-        /> */}
         <DatePickerField
           label={'Start Date'}
           input={'startDate'}
           control={control}
-          pattern={/^\d{2}\/\d{2}\/\d{4}$/}
+          pattern={dateRegex}
           errorMessage={'Please select start date'}
         />
       </FormWrapper>
 
-      <Button type="submit" onClick={() => SaveEmployee()}>
+      <Button
+        type="submit"
+        onClick={() => {
+          SaveEmployee();
+        }}>
         Save
       </Button>
     </Form>

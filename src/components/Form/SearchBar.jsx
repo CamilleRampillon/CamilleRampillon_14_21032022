@@ -6,7 +6,7 @@ import search from '../../assets/search.svg';
 const Form = styled.form`
   display: flex;
   input {
-    border-radius: 10px 0px 0px 10px;
+    border-radius: 10px;
   }
 `;
 
@@ -16,12 +16,16 @@ const Icon = styled.img`
   height: 21px;
   font-size: 0.85rem;
   border-radius: 0px 10px 10px 0px;
-  background-color: #f1f4f8;
   margin-top: 8px;
-  padding: 12px;
+  padding: 11px;
   border: none;
 `;
 
+/**
+ * Renders the table search bar
+ * @param {function} requestSearch
+ * @returns {JSX}
+ */
 export const SearchBar = ({ requestSearch }) => {
   const { register, getValues } = useForm();
 

@@ -1,21 +1,29 @@
 import { createGlobalStyle } from 'styled-components';
-import '../../assets/fonts.css';
 
 /**
  * CSS Global styles for the site using styled.components
  */
 export const GlobalStyle = createGlobalStyle`
+  * {
+    font-family: sans-serif !important; 
+  }
   body {
     margin: 0;
-    font-family: 'Poppins', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: #38393b;
     font-weight: ${({ theme }) => theme.fontWeight.regular};
   }
+
+  input {
+    font-family: sans-serif;
+    }
   
-  input{
-    font-family: 'Poppins', sans-serif;
+    &:focus {
+      background-color: ${({ theme }) => theme.colors.light};
+      outline: 1px solid ${({ theme }) => theme.colors.light};
+      box-shadow: 0px 0px 7px ${({ theme }) => theme.colors.shadow};
+    }
   }
   
   code {

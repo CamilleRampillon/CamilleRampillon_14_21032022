@@ -11,26 +11,30 @@ import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 
-// import SearchBar from 'material-ui-search-bar';
-
 const dayjs = require('dayjs');
 
-const employees = JSON.parse(localStorage.getItem('employees')) ?? [];
-const originalEmployeesRows = employees.map(employee => {
-  return {
-    firstName: employee.firstName,
-    lastName: employee.lastName,
-    birthdate: employee.birthdate,
-    department: employee.department.label,
-    startDate: employee.startDate,
-    street: employee.street,
-    city: employee.city,
-    state: employee.state.value,
-    zipCode: employee.zipCode,
-  };
-});
-
+/**
+ * Render Employee Table
+ * Component that uses material ui
+ * @returns {JSX}
+ */
 export const EmployeeTable = () => {
+  const employees = JSON.parse(localStorage.getItem('employees')) ?? [];
+
+  const originalEmployeesRows = employees.map(employee => {
+    return {
+      firstName: employee.firstName,
+      lastName: employee.lastName,
+      birthdate: employee.birthdate,
+      department: employee.department.label,
+      startDate: employee.startDate,
+      street: employee.street,
+      city: employee.city,
+      state: employee.state.value,
+      zipCode: employee.zipCode,
+    };
+  });
+
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('firstName');
   const [page, setPage] = useState(0);
@@ -38,23 +42,42 @@ export const EmployeeTable = () => {
 
   const [rows, setRows] = useState(originalEmployeesRows);
 
+  /**
+   * Sort the list in ascending or descending order according to a property
+   * (by default sort in ascending order of first names)
+   * @param {object} event
+   * @param {string} property
+   */
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
 
+  /**
+   * Change the table page
+   * @param {object} event
+   * @param {number} newPage
+   */
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
+  /**
+   * Change the number of rows to display in the table
+   * @param {object} event
+   */
   const handleChangeRowsPerPage = event => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
+  /**
+   * Filters the display of the list of employees in the table
+   * when a new value is entered in the search bar
+   * @param {string} searchedVal
+   */
   const requestSearch = searchedVal => {
-    console.log(searchedVal);
     const filteredRows = originalEmployeesRows.filter(row => {
       return [
         row.firstName,

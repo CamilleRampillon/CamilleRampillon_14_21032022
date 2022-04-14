@@ -1,12 +1,4 @@
-import { Link } from 'react-router-dom';
-import styled, { keyframes } from 'styled-components';
-import close from '../assets/close.svg';
-import done from '../assets/hrnet-logo.jpeg';
-
-export const modalopen = keyframes`
-  from { opacity: 0;  }
-  to { opacity: 1; }
-`;
+import styled from 'styled-components';
 
 const MODAL = styled.div`
   position: fixed;
@@ -20,78 +12,69 @@ const MODAL = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
+  font-family: sans-serif;
 `;
-const ModalWrapper = styled.div`
-  background-color: ${({ theme }) => theme.colors.light};
-  box-shadow: 0px 0px 7px ${({ theme }) => theme.colors.shadow};
+const ModalContainer = styled.div`
+  background-color: #fff;
+  box-shadow: 0px 0px 7px #f1f4f8;
   width: 100%;
   max-width: 400px;
-  animation: ${modalopen} 0.3s ease-in-out;
+  animation: modalopen 0.3s ease-in-out;
   border-radius: 20px;
   position: relative;
   margin: 16px;
-`;
-const Image = styled.img`
-  width: 200px;
-`;
-const Title = styled.h1`
-  margin: 20px 0 10px;
-`;
-const Text = styled.p`
-  margin: 0;
+  flex-direction: column;
+  display: flex;
+  align-items: end;
 `;
 const ModalContent = styled.div`
   text-align: center;
   padding: 15px 8%;
   margin: 15px auto;
+  img {
+    width: 200px;
+  }
 `;
-
-const ModalFooter = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  gap: 16px;
-  padding: 16px;
-  margin-top: 36px;
+const Title = styled.h2`
+  margin: 20px 0 10px;
+`;
+const Text = styled.p`
+  margin: 0;
 `;
 const CloseButton = styled.button`
-  background-color: ${({ theme }) => theme.colors.secondary};
+  background-color: #fecf2d;
   padding: 12px;
   border-radius: 60px;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-`;
-const RedirectButton = styled(Link)`
-  font-size: ${({ theme }) => theme.fontSize.xs};
-  font-weight: ${({ theme }) => theme.fontWeight.bold};
-  background-color: ${({ theme }) => theme.colors.secondary};
-  color: ${({ theme }) => theme.colors.text};
-  padding: 12px 24px;
-  border-radius: 30px;
-  border: none;
-  text-align: center;
-  text-decoration: none;
+  margin: 10px;
 `;
 
-export const Modal = modalProps => {
-  const { setModalIsOpen } = modalProps;
+export const Modal = ({ show, setShow, title, text, image }) => {
   return (
-    <MODAL>
-      <ModalWrapper>
-        <ModalContent>
-          <Image src={done} alt="Wealth Health" />
-          <Title>Success !</Title>
-          <Text>The new employee has been created</Text>
-        </ModalContent>
-        <ModalFooter>
-          <RedirectButton to="/employee-list">View Employees</RedirectButton>
-          <CloseButton onClick={() => setModalIsOpen(false)}>
-            <img src={close} alt="" />
+    show && (
+      <MODAL>
+        <ModalContainer>
+          <ModalContent>
+            {image && <img src={image} alt="" />}
+            <Title>{title}</Title>
+            <Text>{text}</Text>
+          </ModalContent>
+          <CloseButton onClick={() => setShow(false)}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24px"
+              viewBox="0 0 24 24"
+              width="24px"
+              fill="#38393b">
+              <path d="M0 0h24v24H0V0z" fill="none" />
+              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+            </svg>
           </CloseButton>
-        </ModalFooter>
-      </ModalWrapper>
-    </MODAL>
+        </ModalContainer>
+      </MODAL>
+    )
   );
 };

@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import { EmployeeForm } from '../components/EmployeeForm';
 import { Layout } from '../components/Layout';
 import { useState } from 'react';
@@ -6,16 +5,15 @@ import { useState } from 'react';
 import { Modal } from 'p14-plugin/dist';
 import done from '../assets/hrnet-logo.jpeg';
 
-const Title = styled.h1`
-  margin-bottom: 26px;
-`;
-
+/**
+ * Renders Employee Creation Page
+ * @returns {JSX}
+ */
 export const CreateEmployee = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   return (
-    <Layout title="HRnet | Create Employee">
-      <Title>Create Employee</Title>
+<Layout title="Create Employee">
       <Modal
         show={modalIsOpen}
         setShow={setModalIsOpen}
