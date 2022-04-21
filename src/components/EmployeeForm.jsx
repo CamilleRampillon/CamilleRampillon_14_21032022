@@ -11,7 +11,9 @@ import {
   zipCodesRegex,
   dateRegex,
 } from '../utils/helpers/regex';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux'
+import { addEmployee } from '../redux/employee.slice'
 
 const Form = styled.form`
   margin: 0 auto;
@@ -64,10 +66,8 @@ const Title = styled.h2`
  * @returns {JSX}
  */
 export const EmployeeForm = modalProps => {
-  const [employees, setEmployees] = useState([]);
-  useEffect(() => {
-    setEmployees(JSON.parse(localStorage.getItem('employees')) ?? []);
-  }, []);
+  //const [employees, setEmployees] = useState([]);
+  const dispatch = useDispatch();
 
   const { setModalIsOpen } = modalProps;
 
@@ -115,9 +115,7 @@ export const EmployeeForm = modalProps => {
    */
   const onSubmit = () => {
     setModalIsOpen(true);
-    employees.push(employee);
-    localStorage.setItem('employees', JSON.stringify(employees));
-
+    dispatch(addEmployee(employee))
     reset();
   };
 

@@ -5,6 +5,8 @@ import { theme } from './utils/style/theme';
 import { GlobalStyle } from './utils/style/GlobalStyle';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider as StyleComponentThemeProvider } from 'styled-components';
+import { Provider } from "react-redux";
+import store from "./redux/store";
 
 const ThemeProvider = ({ children, theme }) => {
   return (
@@ -16,7 +18,19 @@ const ThemeProvider = ({ children, theme }) => {
     </StyleComponentThemeProvider>
   );
 };
-
+ReactDOM.render(
+  <Provider store={store}>
+    <React.StrictMode>
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <App />
+      </ThemeProvider>
+    </BrowserRouter>
+    </React.StrictMode>
+  </Provider>,
+  document.getElementById("root")
+);
+/*
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
@@ -26,4 +40,4 @@ ReactDOM.render(
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root'),
-);
+);*/

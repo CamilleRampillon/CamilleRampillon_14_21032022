@@ -1,7 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getComparator } from '../utils/helpers/sortEmployeeTable';
 import { EmployeeTableHead } from './EmployeeTableHeader';
 import { SearchBar } from './Form/SearchBar';
+import { selectEmployees } from '../redux/selectors'
+import { fetchEmployees } from '../redux/employee.slice'
+import { useSelector, useDispatch  } from 'react-redux';
 
 //material ui
 import Table from '@mui/material/Table';
@@ -19,7 +22,12 @@ const dayjs = require('dayjs');
  * @returns {JSX}
  */
 export const EmployeeTable = () => {
-  const employees = JSON.parse(localStorage.getItem('employees')) ?? [];
+  let employees = useSelector(selectEmployees).employees;  // retrieve Redux state
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+   dispatch(fetchEmployees())
+  }, []);
 
   const originalEmployeesRows = employees.map(employee => {
     return {
